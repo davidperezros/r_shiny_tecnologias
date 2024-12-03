@@ -244,37 +244,40 @@ server <- function(input, output) {
 
     paste0(variable_name)
   })
-  
-  
-  
-  glosario_ccaa <- as.data.frame(read_sf("https://www.ine.es/wstempus/geojs/ES/CONTORNOS/70") )%>%select(id_region,nom_region)
-  
+
+
+
+  glosario_ccaa <- as.data.frame(read_sf("https://www.ine.es/wstempus/geojs/ES/CONTORNOS/70")) %>% select(id_region, nom_region)
+
   output$variable2 <- renderText({
     aux <- input$anyo
     click <- input$map_shape_click
 
-    if (is.null(click)) {cod_ccaa=data.frame(id <-"16473")}else{
-    cod_ccaa <- click}
+    if (is.null(click)) {
+      cod_ccaa <- data.frame(id <- "16473")
+    } else {
+      cod_ccaa <- click
+    }
 
-    paste0("Equipamiento en las viviendas en el ", aux, " (%). ",glosario_ccaa$nom_region[glosario_ccaa$id_region==cod_ccaa$id])
+    paste0("Equipamiento en las viviendas en el ", aux, " (%). ", glosario_ccaa$nom_region[glosario_ccaa$id_region == cod_ccaa$id])
   })
-  
-  
 
-  
-  
-  
 
-  
-  
-  
+
+
+
+
+
+
+
+
   # Datos reactivos para captar la selección del mapa
-  
+
   final_reactive_bubble <- reactive({
     # Obtener el clic y el valor de input$x
     click <- input$map_shape_click
     selected_anyo <- as.character(input$anyo)
-    
+
     if (is.null(click)) {
       # Si no hay clic, solo filtra por variable
       df <- ccaa22 %>%
@@ -285,13 +288,13 @@ server <- function(input, output) {
         filter(`NombrePeriodo` == selected_anyo) %>%
         filter(`id_region` == click$id)
     }
-    
+
     return(df) # Devolver el dataframe filtrado
   })
-  
-  
-  
-  
+
+
+
+
   # GRÁFICO GGPLOT
   output$bubbleplot <- renderPlot({
     df <- final_reactive_bubble() # Obtener los datos filtrados
@@ -299,42 +302,32 @@ server <- function(input, output) {
     if (nrow(df) == 0) {
       return(NULL)
     } # Si no hay datos, no hacer nada
-    
+
     # Extraer los dos últimos dígitos del año
-    
+
     # Crear el gráfico de línea
     # Crear el gráfico de burbujas
     # Definir el ancho de la envoltura del texto
 
     # Crear el gráfico de burbujas
     ggplot(df, aes(x = tipodeequipamiento, y = 1, size = Valor, label = paste0(Valor, "%"), fill = Valor)) +
-      geom_point(shape = 21, color = "black",stroke = 0) +
-      scale_x_discrete(labels = function(x) str_wrap(x, width = 15))+
+      geom_point(shape = 21, color = "black", stroke = 0) +
+      scale_x_discrete(labels = function(x) str_wrap(x, width = 15)) +
       geom_text(vjust = 0.5, hjust = 0.5, size = 4, color = "white") +
-      scale_size(range = c(10, 30)) +  # Ajusta el rango del tamaño de las burbujas
-      scale_fill_gradient(low = "pink", high = "#881333") +  # Gama de colores de rojo
+      scale_size(range = c(10, 30)) + # Ajusta el rango del tamaño de las burbujas
+      scale_fill_gradient(low = "pink", high = "#881333") + # Gama de colores de rojo
       theme_minimal() +
-      labs(        x = NULL,
+      labs(
+        x = NULL,
         y = NULL
       ) +
       theme(
-        axis.text.x = element_text(size = 10, color = "#457e76",face="bold"),  # Ajusta el tamaño y color del texto del eje X
-        axis.text.y = element_blank(),  # Elimina los textos de los ejes
-        axis.ticks = element_blank(),  # Elimina las marcas de los ejes
-        panel.grid = element_blank(),  # Elimina las líneas de la cuadrícula
-        panel.background = element_blank(),  # Elimina el fondo del panel
+        axis.text.x = element_text(size = 10, color = "#457e76", face = "bold"), # Ajusta el tamaño y color del texto del eje X
+        axis.text.y = element_blank(), # Elimina los textos de los ejes
+        axis.ticks = element_blank(), # Elimina las marcas de los ejes
+        panel.grid = element_blank(), # Elimina las líneas de la cuadrícula
+        panel.background = element_blank(), # Elimina el fondo del panel
         legend.position = "none"
       )
   })
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
 }
