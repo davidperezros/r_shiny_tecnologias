@@ -1,5 +1,7 @@
 # Libraries used
 library(htmltools)
+library(stringr)
+
 library(shiny)
 library(shinydashboard)
 library(bslib)
@@ -33,9 +35,7 @@ names(variables) <- c(
 
 
 
-
 # UI ----------------------------------------------------------------------
-
 ui <- page_sidebar(
   includeCSS("www/style.css"),
   title = tags$a(href = "https://www.ine.es/", target = "_blank", tags$img(src = "ine_logo.svg", alt = "Logo", class = "logo")),
@@ -51,7 +51,7 @@ ui <- page_sidebar(
     selectizeInput(
       "x", "Variables",
       variables,
-      selected = "ordenadoresdecualquiertipoincluidosnetbookstabletsdemanoetc"
+      selected = "viviendasconalguntipodeordenador"
     ),
     selectizeInput(
       "anyo", "Año",
@@ -63,7 +63,7 @@ ui <- page_sidebar(
         "Fuente de datos: INE",
         bsicons::bs_icon("info-circle")
       ),
-      "Para más ifnormación que la mostrada debjo, visitar la web del INE.",
+      "Para más información que la mostrada debajo, visitar la web del INE.",
       placement = "bottom"
     ),
     tags$div(
@@ -71,54 +71,46 @@ ui <- page_sidebar(
       tags$span("Fuentes de datos:"), # Título de la sección
       tags$ul(
         # Lista con los hipervínculos
-        tags$li("Tamaño población, ", tags$a(href = "https://www.ine.es/jaxiT3/Tabla.htm?t=10262&L=0", "https://www.ine.es/jaxiT3/Tabla.htm?t=10262&L=0")),
-        tags$li("Datos ECOICOP, ", tags$a(href = "https://www.ine.es/jaxiT3/Tabla.htm?t=25143&L=0", "https://www.ine.es/jaxiT3/Tabla.htm?t=25143&L=0")),
-        tags$li("Datos sueldo medio, ", tags$a(href = "https://www.ine.es/jaxiT3/Tabla.htm?t=28191&L=0", "https://www.ine.es/jaxiT3/Tabla.htm?t=28191&L=0")),
-        tags$li("Contornos comunidades, ", tags$a(href = "https://www.ine.es/wstempus/geojs/ES/CONTORNOS/70", "https://www.ine.es/wstempus/geojs/ES/CONTORNOS/70"))
+        tags$li("Datos viviendas, ", tags$a(href = "https://www.ine.es/jaxi/Tabla.htm?tpx=70470&L=0", "https://www.ine.es/jaxi/Tabla.htm?tpx=70470&L=0")),
+        tags$li("Contornos comunidades, ", tags$a(href = "https://www.ine.es/wstempus/geojs/ES/CONTORNOS/70", "https://www.ine.es/wstempus/geojs/ES/CONTORNOS/70")),
+        tags$li("Fuente principal: Encuesta sobre equipamiento y uso de tecnologías de información y comunicación en los hogares. ", tags$a(href = "https://www.ine.es/dyngs/INEbase/es/operacion.htm?c=Estadistica_C&cid=1254736176741&menu=resultados&idp=1254735576692", "https://www.ine.es/dyngs/INEbase/es"))
+        
       )
     )
   ),
-  layout_columns(
-    fill = FALSE,
-    value_box(
-      title = "Número de habitantes", value = textOutput("poblacion22"), theme = value_box_theme(
-        bg = "#FFFFFF",
-        fg = "#457E76"
-      ), showcase = fontawesome::fa_i("people-group"),
-      showcase_layout = "left center", full_screen = FALSE, fill = TRUE,
-      height = NULL
-    ),
-    value_box(
-      title = "Sueldo medio bruto", value = textOutput("sueldomedio"), theme = value_box_theme(
-        bg = "#FFFFFF",
-        fg = "#457E76"
-      ), showcase = bsicons::bs_icon("currency-euro"),
-      showcase_layout = "left center", full_screen = FALSE, fill = TRUE,
-      height = NULL
-    ),
-    value_box(
-      title = "Porcenetaje de la población total", value = textOutput("info"),
-      theme = value_box_theme(bg = "#FFFFFF", fg = "#457E76"),
-      showcase = bsicons::bs_icon("percent"), showcase_layout = "left center",
-      full_screen = FALSE, fill = TRUE, height = NULL
-    )
-  ),
   layout_column_wrap(
-    width = 1 / 2,
-    heigth = 400,
-    card(
-      full_screen = TRUE,
-      card_header("Ambito geográfico"),
-      leafletOutput("map")
+    width = 3,  # Ajustar el ancho total para las columnas
+    height = 400,
+    layout_column_wrap(
+      width = 2,  # Ancho de la columna del mapa
+      card(
+        full_screen = TRUE,
+        card_header("Ambito geográfico"),
+        leafletOutput("map")
+      )
     ),
     layout_column_wrap(
-      width = 1,
+      width = 1,  # Ancho de la columna del gráfico de líneas
       heights_equal = "row",
       card(
         full_screen = TRUE,
         card_header(textOutput("variable")),
         plotOutput("lineChart")
+      ),
+      card(
+        full_screen = TRUE,
+        card_header("Otro Gráfico de Línea"),
+        plotOutput("lineChart2")  # Nuevo gráfico debajo del primer gráfico de líneas
       )
+    )
+  ),
+  layout_column_wrap(
+    width = 1,  # Fila que ocupa todo el ancho
+    height = 200,
+    card(
+      full_screen = TRUE,
+      card_header(textOutput("variable2")),
+      plotOutput("bubbleplot")  # Gráfico que ocupa todo el ancho
     )
   )
 )
