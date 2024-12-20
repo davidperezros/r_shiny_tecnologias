@@ -122,9 +122,3 @@ ui <- page_sidebar(
     )
   )
 )
-
-install.packages("remotes")
-remotes::install_github("es-ine/ineapir")
- library(ineapir)
- get_data_table(idTable = 33387, nlast = 1, unnest = TRUE)
- 
