@@ -102,3 +102,25 @@ color:  #881333;
   color:  #457e76;
 
 }
+
+
+
+
+/* .header-container alinea sus hijos de manera que el logo está a la izquierda, el título centrado en el medio, y el icono de GitHub a la derecha. El título "Viviendas" se centra dentro del espacio disponible, ocupando todo el espacio entre el logo y el icono de GitHub.*/
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+
+.header-title {
+  flex: 1;
+  text-align: center;
+  font-size: 24px; /* Ajusta el tamaño del texto según tus necesidades */
+  color: #990033; /* Color del texto */
+}
+
+
+

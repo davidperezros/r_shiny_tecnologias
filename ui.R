@@ -36,11 +36,20 @@ names(variables) <- c(
 
 
 # UI ----------------------------------------------------------------------
+# UI ----------------------------------------------------------------------
 ui <- page_sidebar(
   includeCSS("www/style.css"),
-  title = tags$a(href = "https://www.ine.es/", target = "_blank", tags$img(src = "ine_logo.svg", alt = "Logo", class = "logo")),
-  tags$div(
-    class = "logo-container2", tags$a(
+  title = tags$div(
+    class = "header-container",
+    tags$a(
+      href = "https://www.ine.es/",
+      target = "_blank",
+      tags$img(src = "ine_logo.svg", alt = "Logo", class = "logo")
+    ),
+    tags$div(
+      class = "header-title", "Viviendas"
+    ),
+    tags$a(
       href = "https://github.com/davidperezros/r_shiny_tecnologias", # Cambia por tu enlace a GitHub
       target = "_blank", # Se abrirá en una nueva pestaña
       icon("github"), # Utiliza un ícono de Font Awesome
@@ -113,3 +122,9 @@ ui <- page_sidebar(
     )
   )
 )
+
+install.packages("remotes")
+remotes::install_github("es-ine/ineapir")
+ library(ineapir)
+ get_data_table(idTable = 33387, nlast = 1, unnest = TRUE)
+ 
