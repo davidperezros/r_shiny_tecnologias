@@ -241,7 +241,6 @@ server <- function(input, output) {
   output$variable <- renderText({
     aux <- input$x
     variable_name <- names(variables)[variables == aux]
-
     paste0(variable_name)
   })
 
